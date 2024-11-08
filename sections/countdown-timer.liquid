@@ -1,0 +1,96 @@
+{{ 'countdown-timer.css' | asset_url | stylesheet_tag }}
+<div class="countdown-timer-section">
+  <div class="countdown-timer-text">
+    <h2>{{ section.settings.main_title }}</h2>
+    <p>{{ section.settings.subtitle }}</p>
+  </div>
+
+  <div class="countdown-timer">
+    <div id="countdown"></div>
+  </div>
+
+  <a href="{{ section.settings.cta_url }}" class="cta-button">
+    {{ section.settings.cta_text }}
+  </a>
+</div>
+
+{% schema %}
+  {
+    "name": "Countdown Timer",
+    "settings": [{
+      "type": "text",
+      "label": "Main Title",
+      "id": "main_title",
+      "default":"Limited Time Offer!"
+    },{
+      "type": "text",
+      "label": "Subtitle",
+      "id": "subtitle",
+      "default": "Hurry, offer ends soon!"
+    },
+    {
+      "type": "text",
+      "label": "Start Date and Time format(YYYY-MM-DDTHH:MM:SS)",
+      "id": "start_time",
+      "default": "2024-11-10T00:00:00"
+    },
+    {
+      "type": "text",
+      "label": "End Date and Time",
+      "id": "end_time",
+      "default": "2024-11-15T00:00:00"
+    },
+    {
+      "type": "url",
+      "label": "Call to Action Button URL",
+      "id": "cta_url",
+      "default": "/collections"
+    },
+    {
+      "type": "text",
+      "label": "Call to Action Button Text",
+      "id": "cta_text",
+      "default": "Shop Now"
+    }],
+    "presets": [
+    {
+      "name": "Countdown Timer",
+      "category": "Custom"
+    }
+  ]
+  }
+{% endschema %}
+
+<script>
+  // Convert the start and end times from Liquid into JavaScript Date objects
+  let startDate = new Date("{{ section.settings.start_time }}")
+  let endDate = new Date("{{ section.settings.end_time }}")
+  // console.log("{{ section.settings.start_time }}")
+  //   console.log("{{ section.settings.end_time }}")
+  
+  
+  function updateCountdown() {
+    let current = new Date()
+    let distance = endDate - current
+    console.log()
+    if (distance < 0) {
+      document.getElementById("countdown").innerHTML = "EXPIRED"
+      clearInterval(countdownInterval)
+    } else {
+      let days = Math.floor(distance / (1000 * 60 * 60 * 24)) 
+      console.log(days)
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      console.log(hours)
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+      console.log(minutes)
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000)
+      console.log(seconds)
+      document.getElementById("countdown").innerHTML =
+        days + "d " + hours + "h " + minutes + "m " + seconds + "s "
+    }
+  }
+
+    setInterval(updateCountdown, 1000)
+  
+  
+</script>
